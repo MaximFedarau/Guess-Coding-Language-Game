@@ -29,9 +29,17 @@ function Home() {
     fetch("https://api.github.com/users").then(
       response => response.json()
     ).then(
-      data => store.dispatch(setData(data[3].login))
+      data => store.dispatch(setData(data[Math.floor(Math.random() * 30)].login))
     )
   },[])
+
+  function generateData() {
+    fetch("https://api.github.com/users").then(
+      response => response.json()
+    ).then(
+      data => store.dispatch(setData(data[Math.floor(Math.random() * 30)].login))
+    )
+  }
 
   return (
     <div>
@@ -40,6 +48,7 @@ function Home() {
       </Head>
       <h1>The beginning of the path:</h1>
       <p>{store.getState().GitHubReducer.data}</p>
+      <button onClick={() => generateData()}>Next</button>
     </div>
   )
 }
