@@ -9,10 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "axios": "^0.26.0",
     "next": "12.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-redux": "^7.2.6",
+    "react-syntax-highlighter": "^15.4.5",
     "redux": "^4.1.2"
   },
   "devDependencies": {
