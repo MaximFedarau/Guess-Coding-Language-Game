@@ -33,7 +33,7 @@ function Home() {
     generateGists()
   },[])
 
-  function generateData() {
+  /*function generateData() {
     fetch(`https://api.github.com/users?since=${Math.floor(Math.random()*10000)}`).then(
       async response => response.json()
     ).then(
@@ -74,14 +74,17 @@ function Home() {
         }
       })
     })
-  }
+  }*/
 
   function generateGists() {
     const client = axios.create({
       auth: {
         username: "MaximFedarau",
-        password: "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"
-      }
+        token: "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"
+      },
+      headers: {
+        "Accept": "application/vnd.github.v3+json"
+    }
     })
 
     client.get(`https://api.github.com/gists/public?page=${Math.floor(Math.random()*100)}`).then(response => {
