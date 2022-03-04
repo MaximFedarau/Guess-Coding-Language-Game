@@ -4,6 +4,7 @@ import { Provider, connect } from "react-redux"
 import ClipLoader from "react-spinners/ClipLoader";
 
 import Head from 'next/head'
+import Script from "next/script"
 
 import React from "react"
 import axios from "axios"
@@ -108,6 +109,26 @@ function Home() {
     })
   }
 
+  const [fastData, setFastData] = React.useState('')
+
+  function fastGenerateGists() {
+    const client = axios.create({
+      headers: {
+        "Authorization": `token ${token1+token2+token3}`
+      }
+    })
+    client.get(`https://api.github.com/gists/public?page=${Math.floor(Math.random()*100)}`).then(response => {
+      const gistFiles  = response.data[Math.floor(Math.random()*response.data.length)].files
+      const language = gistFiles[Object.keys(gistFiles)[0]].language
+      console.log(language)
+    })
+
+  }
+
+  function fastMarkup() {
+    return  {__html: '<script src="https://gist.github.com/GrahamcOfBorg/d2f3e0e8579b29e7c5b5c47b01586901.js"></script>'}
+  }
+
   return (
     <div>
       <Head>
@@ -122,7 +143,12 @@ function Home() {
       <br/><br/><button onClick={() => {
         generateGists()
         store.dispatch(setData(''))
-      }}>Next</button>
+      }}>Next</button><br/>
+      {fastData}<br/>
+      <button onClick={() => {
+        fastGenerateGists()
+      }}>Fast Next</button><br/>
+      <div dangerouslySetInnerHTML={fastMarkup()}></div>
     </div>
   )
 }
