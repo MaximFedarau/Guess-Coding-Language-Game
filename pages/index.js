@@ -1,13 +1,15 @@
 import store from "../store"
 
 import { Provider, connect } from "react-redux"
+import ClipLoader from "react-spinners/ClipLoader";
 
 import Head from 'next/head'
 
 import React from "react"
 import axios from "axios"
 
-import SyntaxHighlighter from 'react-syntax-highlighter';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+
 //import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 function setData(data) {
@@ -90,17 +92,15 @@ function Home() {
     
     client.get(`https://api.github.com/gists/public?page=${Math.floor(Math.random()*100)}`).then(response => {
       const gist = response.data[Math.floor(Math.random()*response.data.length)]
-      console.log(gist.url)
       client.get(gist.url).then(response => {
         const language = response.data.files[Object.keys(response.data.files)[0]].language
-        const languagesList = ["Python","PHP","JavaScript",'TypeScript','Swift','Ruby','C#','CSS','TSX','Kotlin','Java','C++','Dart','Markdown','HTML','XML','Shell','JSON','YAMl','SCSS','Solidity','Go','Scala','Batchfile','Pug']
+        if (language===undefined) generateGists()
+        const languagesList = ["Python","PHP","JavaScript",'TypeScript','Swift','Ruby','C#','CSS','TSX','Kotlin','Java','C++','Dart','Markdown','HTML','XML','Shell','YAMl','SCSS','Solidity','Go','Scala','Batchfile','Pug']
 
 
         if (languagesList.indexOf(language) === -1) {
-          generateGists() 
-          console.log(1,language)}
+          generateGists() }
         else {
-          console.log(languagesList.indexOf(language),language)
           const content = response.data.files[Object.keys(response.data.files)[0]].content
           store.dispatch(setData(content))
         }
@@ -115,10 +115,14 @@ function Home() {
       </Head>
       <h1>The beginning of the path:</h1>
       {/*<p>{store.getState().GitHubReducer.data}</p>*/}
-      <SyntaxHighlighter language="javascript">
+      {(store.getState().GitHubReducer.data === "") ? <ClipLoader color={"black"} loading={true} size={100}/>
+: <SyntaxHighlighter language="java" showLineNumbers={true} wrapLines={true} customStyle={{height: "30rem"}}>
       {store.getState().GitHubReducer.data}
-    </SyntaxHighlighter>
-      <button onClick={() => generateGists()}>Next</button>
+    </SyntaxHighlighter>}
+      <br/><br/><button onClick={() => {
+        generateGists()
+        store.dispatch(setData(''))
+      }}>Next</button>
     </div>
   )
 }
