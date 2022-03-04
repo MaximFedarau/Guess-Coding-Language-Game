@@ -83,7 +83,7 @@ function Home() {
         token: "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"
       },
       headers: {
-        "Accept": "application/vnd.github.v3+json"
+        'User-Agent': 'request'
     }
     })
 
