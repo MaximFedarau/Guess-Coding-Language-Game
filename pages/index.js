@@ -6,12 +6,16 @@ import ClipLoader from "react-spinners/ClipLoader";
 import Head from 'next/head'
 import Script from "next/script"
 
+import { githubGist } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import Gist from "super-react-gist"
+
+import ReactEmbedGist from "react-embed-gist"
+
 import React from "react"
 import axios from "axios"
 
-import ReactEmbedGist from "react-embed-gist";
-
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import GithubGist from "react-syntax-highlighter/dist/cjs/styles/hljs/github-gist";
 
 //import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
@@ -111,7 +115,7 @@ function Home() {
     })
   }
 
-  const [fastData, setFastData] = React.useState('')
+  const [fastData, setFastData] = React.useState('https://gist.github.com/GeorgeGkas/5f55a83909a3f5b766934ffe802d30df')
 
   function fastGenerateGists() {
     const client = axios.create({
@@ -126,6 +130,7 @@ function Home() {
       const languagesList = ["Python","PHP","JavaScript",'TypeScript','Swift','Ruby','C#','CSS','TSX','Kotlin','Java','C++','Dart','Markdown','HTML','XML','Shell','YAMl','SCSS','Solidity','Go','Scala','Batchfile','Pug']
       if (languagesList.indexOf(language) === -1) fastGenerateGists()
       else {
+        //const link = `https://gist.github.com/${gist.owner.login}/${gist.id}`
         setFastData(gist.owner.login+"/"+gist.id)
       }
     })
@@ -157,7 +162,15 @@ function Home() {
         fastGenerateGists()
         console.log(fastMarkup().__html)
       }}>Fast Next</button><br/>
-      <ReactEmbedGist gist={fastData}/>
+      {/*<Gist url={fastData}/>*/}
+      <ReactEmbedGist
+  gist={fastData}
+  wrapperClass="gist__bash"
+  loadingClass="loading__screen"
+  titleClass="gist__title"
+  errorClass="gist__error"
+  contentClass="gist__content"
+/>
       {/* (fastData === "") ? "sdsd" : <div dangerouslySetInnerHTML={{__html: `<script class="gist-code" src="${fastData}"></script>`}}></div>*/}
     </div>
   )
