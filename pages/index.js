@@ -116,7 +116,7 @@ function Home() {
       <h1>The beginning of the path:</h1>
       {/*<p>{store.getState().GitHubReducer.data}</p>*/}
       {(store.getState().GitHubReducer.data === "") ? <ClipLoader color={"black"} loading={true} size={100}/>
-: <SyntaxHighlighter language="java" showLineNumbers={true} wrapLines={true} customStyle={{height: "30rem"}}>
+: <SyntaxHighlighter language="java" showLineNumbers={true} wrapLines={true} customStyle={{maxHeight: "30rem"}}>
       {store.getState().GitHubReducer.data}
     </SyntaxHighlighter>}
       <br/><br/><button onClick={() => {
