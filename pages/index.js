@@ -9,6 +9,8 @@ import Script from "next/script"
 import React from "react"
 import axios from "axios"
 
+import ReactEmbedGist from "react-embed-gist";
+
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 
 //import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
@@ -118,15 +120,21 @@ function Home() {
       }
     })
     client.get(`https://api.github.com/gists/public?page=${Math.floor(Math.random()*100)}`).then(response => {
-      const gistFiles  = response.data[Math.floor(Math.random()*response.data.length)].files
-      const language = gistFiles[Object.keys(gistFiles)[0]].language
-      console.log(language)
+      const gist  = response.data[Math.floor(Math.random()*response.data.length)]
+      console.log(gist)
+      const language = gist.files[Object.keys(gist.files)[0]].language
+      const languagesList = ["Python","PHP","JavaScript",'TypeScript','Swift','Ruby','C#','CSS','TSX','Kotlin','Java','C++','Dart','Markdown','HTML','XML','Shell','YAMl','SCSS','Solidity','Go','Scala','Batchfile','Pug']
+      if (languagesList.indexOf(language) === -1) fastGenerateGists()
+      else {
+        setFastData(gist.owner.login+"/"+gist.id)
+      }
     })
 
   }
 
   function fastMarkup() {
-    return  {__html: '<script src="https://gist.github.com/GrahamcOfBorg/d2f3e0e8579b29e7c5b5c47b01586901.js"></script>'}
+    return  {__html: `<div><script src="${fastData}"></script></div>`}
+    //`<script src="${fastData}"></script>`
   }
 
   return (
@@ -147,8 +155,10 @@ function Home() {
       {fastData}<br/>
       <button onClick={() => {
         fastGenerateGists()
+        console.log(fastMarkup().__html)
       }}>Fast Next</button><br/>
-      <div dangerouslySetInnerHTML={fastMarkup()}></div>
+      <ReactEmbedGist gist={fastData}/>
+      {/* (fastData === "") ? "sdsd" : <div dangerouslySetInnerHTML={{__html: `<script class="gist-code" src="${fastData}"></script>`}}></div>*/}
     </div>
   )
 }
