@@ -93,7 +93,7 @@ function Home() {
       console.log(gist.url)
       client.get(gist.url).then(response => {
         const language = response.data.files[Object.keys(response.data.files)[0]].language
-        const languagesList = ["Python","PHP","JavaScript",'TypeScript','Swift','Ruby','C#','CSS','TSX','Kotlin','Java','C++','Dart','Markdown','HTML','XML','Shell','JSON','YAMl','SCSS','Solidity','Go','Scala']
+        const languagesList = ["Python","PHP","JavaScript",'TypeScript','Swift','Ruby','C#','CSS','TSX','Kotlin','Java','C++','Dart','Markdown','HTML','XML','Shell','JSON','YAMl','SCSS','Solidity','Go','Scala','Batchfile','Pug']
 
 
         if (languagesList.indexOf(language) === -1) {
