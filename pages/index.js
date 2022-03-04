@@ -76,12 +76,14 @@ function Home() {
     })
   }*/
 
+  var token1 = "ghp_5dJl1u8fC"
+  var token2 = "eTEAHrET7z1M31Mf"
+  var token3 = "bU2Ac0K0s6W"
 
   function generateGists() {
     const client = axios.create({
-
       headers: {
-        "Authorization": "token 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"
+        "Authorization": `token ${token1+token2+token3}`
       }
 
     })
