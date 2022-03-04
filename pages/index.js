@@ -76,17 +76,16 @@ function Home() {
     })
   }*/
 
+
   function generateGists() {
     const client = axios.create({
-      auth: {
-        username: "MaximFedarau",
-        token: "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"
-      },
-      headers: {
-        'User-Agent': 'request'
-    }
-    })
 
+      headers: {
+        "Authorization": "token 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"
+      }
+
+    })
+    
     client.get(`https://api.github.com/gists/public?page=${Math.floor(Math.random()*100)}`).then(response => {
       const gist = response.data[Math.floor(Math.random()*response.data.length)]
       console.log(gist.url)
