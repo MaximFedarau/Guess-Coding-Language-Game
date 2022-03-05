@@ -1,0 +1,22 @@
+.title {
+    color: blue;
+    font-size: 0;
+}
+
+.content {
+    max-width: 23rem;
+}
+
+.gist-data {
+    max-height: 15rem;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.gist-meta {
+    display: none;
+}

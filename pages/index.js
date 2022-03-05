@@ -121,9 +121,8 @@ function Home() {
     client.get(`https://api.github.com/gists/public?page=${Math.floor(Math.random()*50)}`).then(response => {
       const gist  = response.data[Math.floor(Math.random()*response.data.length)]
       const language = gist.files[Object.keys(gist.files)[0]].language
-      console.log(language)
-      const languagesList = ["Python","PHP","JavaScript",'TypeScript','Swift','Ruby','C#','CSS','TSX','Kotlin','Java','C++','Dart','HTML','XML','Shell','YAMl','SCSS','Solidity','Go','Scala','Batchfile','Pug','Fluent','Emacs Lisp']
-      if (language===null || language==="Markdown" || languagesList.indexOf(language) === -1) fastGenerateGists()
+      const languagesList = ["Python","PHP","JavaScript",'TypeScript','Swift','Ruby','C#','CSS','TSX','Kotlin','Java','C++','Dart','HTML','XML','Shell','YAMl','SCSS','Solidity','Go','Scala','Batchfile','Pug','Fluent','Emacs Lisp','Lua']
+      if (Object.keys(gist.files).length>=2 || language===null || language==="Markdown" || languagesList.indexOf(language) === -1) fastGenerateGists()
       else {
         //const link = `https://gist.github.com/${gist.owner.login}/${gist.id}`
         store.dispatch(setData(gist.owner.login+"/"+gist.id))
@@ -150,10 +149,21 @@ function Home() {
       <br/><br/><button onClick={() => {
         fastGenerateGists()
         store.dispatch(setData(''))
-      }}>Next</button>
+      }}>Next</button><br/>
       {(store.getState().GitHubReducer.data === "") ? <ClipLoader color={"black"} loading={true} size={100}/> : <ReactEmbedGist
   gist={store.getState().GitHubReducer.data}
+  titleClass="title"
+  contentClass="content"
+  wrapperClass="wrapper"
+  loadingFallback={""}
 />}
+<style jsx>
+{`
+.title {
+  color: red;
+}
+`}  
+</style>
     </div>
   )
 }
