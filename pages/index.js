@@ -8,6 +8,8 @@ import Head from 'next/head'
 import React from "react"
 import axios from "axios"
 
+import ReactEmbedGist from "react-embed-gist"
+
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 
 //import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
@@ -32,7 +34,7 @@ const mapDispatchToProps = {
 function Home() {
 
   React.useEffect(() => {
-    generateGists()
+    fastGenerateGists()
   },[])
 
   /*function generateData() {
@@ -82,7 +84,7 @@ function Home() {
   var token2 = "eTEAHrET7z1M31Mf"
   var token3 = "bU2Ac0K0s6W"
 
-  function generateGists() {
+  /*function generateGists() {
     const client = axios.create({
       headers: {
         "Authorization": `token ${token1+token2+token3}`
@@ -106,6 +108,32 @@ function Home() {
         }
       })
     })
+  }*/
+
+  function fastGenerateGists() {
+    const client = axios.create({
+      method: "get",
+      headers: {
+        "Authorization": `token ${token1+token2+token3}`,
+        //"Access-Control-Allow-Origin": "*"
+      }
+    })
+    client.get(`https://api.github.com/gists/public?page=${Math.floor(Math.random()*50)}`).then(response => {
+      const gist  = response.data[Math.floor(Math.random()*response.data.length)]
+      const language = gist.files[Object.keys(gist.files)[0]].language
+      console.log(language)
+      const languagesList = ["Python","PHP","JavaScript",'TypeScript','Swift','Ruby','C#','CSS','TSX','Kotlin','Java','C++','Dart','HTML','XML','Shell','YAMl','SCSS','Solidity','Go','Scala','Batchfile','Pug','Fluent','Emacs Lisp']
+      if (language===null || language==="Markdown" || languagesList.indexOf(language) === -1) fastGenerateGists()
+      else {
+        //const link = `https://gist.github.com/${gist.owner.login}/${gist.id}`
+        store.dispatch(setData(gist.owner.login+"/"+gist.id))
+        console.log(language)
+      }
+    }).catch(e => {
+      fastGenerateGists()
+      console.log(e)
+    })
+
   }
 
   return (
@@ -115,14 +143,17 @@ function Home() {
       </Head>
       <h1>The beginning of the path:</h1>
       {/*<p>{store.getState().GitHubReducer.data}</p>*/}
-      {(store.getState().GitHubReducer.data === "") ? <ClipLoader color={"black"} loading={true} size={100}/>
+      {/*(store.getState().GitHubReducer.data === "") ? <ClipLoader color={"black"} loading={true} size={100}/>
 : <SyntaxHighlighter language="java" showLineNumbers={true} wrapLines={true} customStyle={{maxHeight: "30rem"}}>
       {store.getState().GitHubReducer.data}
-    </SyntaxHighlighter>}
+  </SyntaxHighlighter>*/}
       <br/><br/><button onClick={() => {
-        generateGists()
+        fastGenerateGists()
         store.dispatch(setData(''))
       }}>Next</button>
+      {(store.getState().GitHubReducer.data === "") ? <ClipLoader color={"black"} loading={true} size={100}/> : <ReactEmbedGist
+  gist={store.getState().GitHubReducer.data}
+/>}
     </div>
   )
 }
