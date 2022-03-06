@@ -7,5 +7,6 @@ Have fun!
 <h1 style="text-align: center">🎯Goals:</h1>
 
 - [ ] Speed up work with the API<br/>
+- [ ] Solve bug with 2 equal options
 - [ ] Add styles<br/>
-- [x] Make game
+- [x] Make all base game mechanics
