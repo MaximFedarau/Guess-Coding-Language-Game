@@ -187,7 +187,8 @@ function Home() {
   return (
     <div>
       <Head>
-        <title>Guess The Code</title>
+        <title>Guess This Code</title>
+        <link rel="icon" href="https://icons.iconarchive.com/icons/custom-icon-design/mono-general-1/128/faq-icon.png"/>
       </Head>
       <h1>{`${points} points`}</h1>
       {/*<p>{store.getState().GitHubReducer.data}</p>*/}
