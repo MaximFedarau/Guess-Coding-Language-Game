@@ -10,7 +10,7 @@ import axios from "axios"
 
 import ReactEmbedGist from "react-embed-gist"
 
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import OptionButton from "../components/OptionButton"
 
 //import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
@@ -35,6 +35,7 @@ function Home() {
 
   React.useEffect(() => {
     fastGenerateGists()
+    console.log("useEffect")
   },[])
 
   /*function generateData() {
@@ -110,15 +111,23 @@ function Home() {
     })
   }*/
 
+  const [rightLanguage,setRightLanguage] = React.useState('')
+  const [buttonData,setButtonData] = React.useState('')
+  const [points,setPoints] = React.useState(0)
+  const [showNextButton,setShowNextButton] = React.useState(false)
+  const [showFail,setShowFail] = React.useState(false)
+
   function fastGenerateGists() {
     const client = axios.create({
       method: "get",
       headers: {
         "Authorization": `token ${token1+token2+token3}`,
+        "Accept": "application/vnd.github.v3+json"
         //"Access-Control-Allow-Origin": "*"
       }
     })
-    client.get(`https://api.github.com/gists/public?page=${Math.floor(Math.random()*50)}`).then(response => {
+    client.get(`https://api.github.com/gists/public?page=${Math.floor(Math.random()*50)+30}`).then(response => {
+      console.log("started api")
       const gist  = response.data[Math.floor(Math.random()*response.data.length)]
       const language = gist.files[Object.keys(gist.files)[0]].language
       const languagesList = ["Python","PHP","JavaScript",'TypeScript','Swift','Ruby','C#','CSS','TSX','Kotlin','Java','C++','Dart','HTML','XML','Shell','YAMl','SCSS','Solidity','Go','Scala','Batchfile','Pug','Fluent','Emacs Lisp','Lua']
@@ -126,13 +135,49 @@ function Home() {
       else {
         //const link = `https://gist.github.com/${gist.owner.login}/${gist.id}`
         store.dispatch(setData(gist.owner.login+"/"+gist.id))
-        console.log(language)
+        setRightLanguage(language)
+        console.log("ready to set random data")
+        setButtonData(getRandomLanguage(language))
       }
     }).catch(e => {
       fastGenerateGists()
       console.log(e)
     })
+  }
 
+  function shuffle(array) {
+      let currentIndex = array.length,  randomIndex;
+    
+      // While there remain elements to shuffle...
+      while (currentIndex != 0) {
+    
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+    
+        // And swap it with the current element.
+        [array[currentIndex], array[randomIndex]] = [
+          array[randomIndex], array[currentIndex]];
+      }
+    
+      return array;
+  }
+
+  function getRandomLanguage(correctAnswer) {
+    let x = 3
+    let languageOptions = [correctAnswer]
+    console.log(languageOptions,1)
+    const languagesList = ["Python","PHP","JavaScript",'TypeScript','Swift','Ruby','C#','CSS','TSX','Kotlin','Java','C++','Dart','HTML','XML','Shell','YAMl','SCSS','Solidity','Go','Scala','Batchfile','Pug','Fluent','Emacs Lisp','Lua']
+    const filteredList = languagesList.filter((value) => {
+      return value !== correctAnswer
+    })
+    while(x>0) {
+      const randomIndex = Math.floor(Math.random()*filteredList.length)
+      languageOptions = languageOptions.concat([filteredList[randomIndex]])
+      x-=1
+    }
+    shuffle(languageOptions)
+    return languageOptions
   }
 
   return (
@@ -140,30 +185,78 @@ function Home() {
       <Head>
         <title>Guess The Code</title>
       </Head>
-      <h1>The beginning of the path:</h1>
+      <h1>{`${points} points`}</h1>
       {/*<p>{store.getState().GitHubReducer.data}</p>*/}
       {/*(store.getState().GitHubReducer.data === "") ? <ClipLoader color={"black"} loading={true} size={100}/>
 : <SyntaxHighlighter language="java" showLineNumbers={true} wrapLines={true} customStyle={{maxHeight: "30rem"}}>
       {store.getState().GitHubReducer.data}
   </SyntaxHighlighter>*/}
-      <br/><br/><button onClick={() => {
-        fastGenerateGists()
-        store.dispatch(setData(''))
-      }}>Next</button><br/>
       {(store.getState().GitHubReducer.data === "") ? <ClipLoader color={"black"} loading={true} size={100}/> : <ReactEmbedGist
   gist={store.getState().GitHubReducer.data}
   titleClass="title"
   contentClass="content"
   wrapperClass="wrapper"
   loadingFallback={""}
-/>}
-<style jsx>
-{`
-.title {
-  color: red;
-}
-`}  
-</style>
+/>}<br/>
+{(showFail) ? <h1>{`You lose. Your score is ${points}. The right answer was - ${rightLanguage}`}</h1> : null}
+{(store.getState().GitHubReducer.data === "") ? null : (<div>
+  <OptionButton name={buttonData[0]} act={() => {
+    if (buttonData[0] === rightLanguage) {
+      setPoints(points+50)
+      setShowNextButton(true)
+    }
+    else {
+      store.dispatch(setData(""))
+      setShowNextButton(true)
+      setShowFail(true)
+    }
+  }}/>
+  <OptionButton name={buttonData[1]} act={() => {
+    if (buttonData[1] === rightLanguage) {
+      setPoints(points+50)
+      setShowNextButton(true)
+    }
+    else {
+      store.dispatch(setData(""))
+      setShowNextButton(true)
+      setShowFail(true)
+    }
+  }}/>
+  <OptionButton name={buttonData[2]} act={() => {
+    if (buttonData[2] === rightLanguage) {
+      setPoints(points+50)
+      setShowNextButton(true)
+    }
+    else {
+      store.dispatch(setData(""))
+      setShowNextButton(true)
+      setShowFail(true)
+    }
+  }}/>
+  <OptionButton name={buttonData[3]} act={() => {
+    if (buttonData[3] === rightLanguage) {
+      setPoints(points+50)
+      setShowNextButton(true)
+    }
+    else {
+      store.dispatch(setData(""))
+      setShowNextButton(true)
+      setShowFail(true)
+    }
+  }}/>
+</div>)}{/*buttonData.map((value) => {
+  return <OptionButton name={value} act={() => {
+    if (value===rightLanguage) console.log("yes")  
+    else console.log("no")
+  }}/> */}<br/><br/>
+  {(showNextButton) ? <button onClick={() => {
+        fastGenerateGists()
+        getRandomLanguage()
+        store.dispatch(setData(''))
+        if (showFail) setPoints(0)
+        setShowFail(false)
+        setShowNextButton(false)
+      }}>{"Next ->"}</button> : null}
     </div>
   )
 }
