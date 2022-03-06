@@ -203,7 +203,7 @@ function Home() {
   wrapperClass="wrapper"
   loadingFallback={""}
 />}<br/>
-{(showFail) ? <h1>{`You lose. Your score is ${points}. The right answer was - ${rightLanguage}`}</h1> : null}
+{(showFail) ? <h1>{`You lose. The right answer was: ${rightLanguage}`}</h1> : null}
 {(store.getState().GitHubReducer.data === "") ? null : (<div>
   <OptionButton status={disableButton} name={buttonData[0]} act={() => {
     if (buttonData[0] === rightLanguage) {
