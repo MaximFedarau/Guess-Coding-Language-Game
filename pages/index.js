@@ -35,7 +35,7 @@ function Home() {
 
   React.useEffect(() => {
     fastGenerateGists()
-    console.log("useEffect")
+    //console.log("useEffect")
   },[])
 
   /*function generateData() {
@@ -116,6 +116,7 @@ function Home() {
   const [points,setPoints] = React.useState(0)
   const [showNextButton,setShowNextButton] = React.useState(false)
   const [showFail,setShowFail] = React.useState(false)
+  const [disableButton,setDisableButton] = React.useState(false)
 
   function fastGenerateGists() {
     const client = axios.create({
@@ -127,7 +128,7 @@ function Home() {
       }
     })
     client.get(`https://api.github.com/gists/public?page=${Math.floor(Math.random()*50)+30}`).then(response => {
-      console.log("started api")
+      //console.log("started api")
       const gist  = response.data[Math.floor(Math.random()*response.data.length)]
       const language = gist.files[Object.keys(gist.files)[0]].language
       const languagesList = ["Python","PHP","JavaScript",'TypeScript','Swift','Ruby','C#','CSS','TSX','Kotlin','Java','C++','Dart','HTML','XML','Shell','YAMl','SCSS','Solidity','Go','Scala','Batchfile','Pug','Fluent','Emacs Lisp','Lua']
@@ -136,7 +137,7 @@ function Home() {
         //const link = `https://gist.github.com/${gist.owner.login}/${gist.id}`
         store.dispatch(setData(gist.owner.login+"/"+gist.id))
         setRightLanguage(language)
-        console.log("ready to set random data")
+        //console.log("ready to set random data")
         setButtonData(getRandomLanguage(language))
       }
     }).catch(e => {
@@ -166,14 +167,17 @@ function Home() {
   function getRandomLanguage(correctAnswer) {
     let x = 3
     let languageOptions = [correctAnswer]
-    console.log(languageOptions,1)
     const languagesList = ["Python","PHP","JavaScript",'TypeScript','Swift','Ruby','C#','CSS','TSX','Kotlin','Java','C++','Dart','HTML','XML','Shell','YAMl','SCSS','Solidity','Go','Scala','Batchfile','Pug','Fluent','Emacs Lisp','Lua']
-    const filteredList = languagesList.filter((value) => {
+    let filteredList = languagesList.filter((value) => {
       return value !== correctAnswer
     })
     while(x>0) {
       const randomIndex = Math.floor(Math.random()*filteredList.length)
-      languageOptions = languageOptions.concat([filteredList[randomIndex]])
+      const randomItem = filteredList[randomIndex]
+      languageOptions = languageOptions.concat([randomItem])
+      filteredList = languagesList.filter((value) => {
+        return value !== randomItem
+      })
       x-=1
     }
     shuffle(languageOptions)
@@ -200,9 +204,10 @@ function Home() {
 />}<br/>
 {(showFail) ? <h1>{`You lose. Your score is ${points}. The right answer was - ${rightLanguage}`}</h1> : null}
 {(store.getState().GitHubReducer.data === "") ? null : (<div>
-  <OptionButton name={buttonData[0]} act={() => {
+  <OptionButton status={disableButton} name={buttonData[0]} act={() => {
     if (buttonData[0] === rightLanguage) {
       setPoints(points+50)
+      setDisableButton(true)
       setShowNextButton(true)
     }
     else {
@@ -211,9 +216,10 @@ function Home() {
       setShowFail(true)
     }
   }}/>
-  <OptionButton name={buttonData[1]} act={() => {
+  <OptionButton status={disableButton} name={buttonData[1]} act={() => {
     if (buttonData[1] === rightLanguage) {
       setPoints(points+50)
+      setDisableButton(true)
       setShowNextButton(true)
     }
     else {
@@ -222,9 +228,10 @@ function Home() {
       setShowFail(true)
     }
   }}/>
-  <OptionButton name={buttonData[2]} act={() => {
+  <OptionButton status={disableButton} name={buttonData[2]} act={() => {
     if (buttonData[2] === rightLanguage) {
       setPoints(points+50)
+      setDisableButton(true)
       setShowNextButton(true)
     }
     else {
@@ -233,9 +240,10 @@ function Home() {
       setShowFail(true)
     }
   }}/>
-  <OptionButton name={buttonData[3]} act={() => {
+  <OptionButton status={disableButton} name={buttonData[3]} act={() => {
     if (buttonData[3] === rightLanguage) {
       setPoints(points+50)
+      setDisableButton(true)
       setShowNextButton(true)
     }
     else {
@@ -255,6 +263,7 @@ function Home() {
         store.dispatch(setData(''))
         if (showFail) setPoints(0)
         setShowFail(false)
+        setDisableButton(false)
         setShowNextButton(false)
       }}>{"Next ->"}</button> : null}
     </div>
