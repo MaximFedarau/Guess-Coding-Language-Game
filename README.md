@@ -9,4 +9,5 @@ Have fun!
 - [ ] Speed up work with the API<br/>
 - [ ] Solve bug with 2 equal options
 - [ ] Add styles<br/>
+- [ ] Add new token!
 - [x] Make all base game mechanics
