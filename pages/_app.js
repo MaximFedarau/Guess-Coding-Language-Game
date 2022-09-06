@@ -1,3 +1,4 @@
+import 'regenerator-runtime/runtime'; // for react-embed-gist
 import { Provider } from 'react-redux';
 
 import 'styles/global.css';

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ClipLoader from 'react-spinners/ClipLoader';
 import ReactEmbedGist from 'react-embed-gist';
 
-import OptionButton from 'components/OptionButton';
+import OptionButton from 'components/OptionButton/OptionButton.component';
 import { languagesList } from 'constants/data';
 import { setData } from 'store/code/code.slice';
 import { codeDataSelector } from 'store/code/code.selector';
@@ -16,12 +16,15 @@ export default function Home() {
 
   React.useEffect(() => fastGenerateGists(), []);
 
-  const [rightLanguage, setRightLanguage] = React.useState('');
-  const [buttonData, setButtonData] = React.useState([]);
-  const [points, setPoints] = React.useState(0);
-  const [showNextButton, setShowNextButton] = React.useState(false);
-  const [showFail, setShowFail] = React.useState(false);
-  const [disableButton, setDisableButton] = React.useState(false);
+  const [gameMechanics, setGameMechanics] = React.useState({
+    rightLanguage: '',
+    buttonData: [],
+  });
+  const [points, setPoints] = React.useState(0); // ! move points to separate state, because if we move it into gameMechanics object, then it may not have enough time to update between ending and restarting the game
+  const [statusControls, setStatusControls] = React.useState({
+    isFailed: false,
+    isSuccess: false,
+  });
 
   const fastGenerateGists = () => {
     const client = axios.create({
@@ -49,8 +52,10 @@ export default function Home() {
           return;
         }
         dispatch(setData(gist.owner.login + '/' + gist.id));
-        setRightLanguage(language);
-        setButtonData(getRandomLanguage(language));
+        setGameMechanics({
+          rightLanguage: language,
+          buttonData: getRandomLanguage(language),
+        });
       })
       .catch((e) => {
         fastGenerateGists(); // we do not showing error screen, because it can be that the API page is down
@@ -92,16 +97,31 @@ export default function Home() {
     return shuffle(languageOptions);
   };
 
-  const handleOptionButtonClick = (value) => () => {
-    if (value === rightLanguage) {
+  const handleOptionButtonClick = (event) => {
+    if (event.target.textContent === gameMechanics.rightLanguage) {
       setPoints(points + 50);
-      setDisableButton(true);
-      setShowNextButton(true);
+      setStatusControls({
+        isSuccess: true,
+        isFailed: false,
+      });
       return;
     }
     dispatch(setData(''));
-    setShowNextButton(true);
-    setShowFail(true);
+    setStatusControls({
+      isSuccess: true,
+      isFailed: true,
+    });
+  };
+
+  const handleNextButtonClick = () => {
+    if (statusControls.isFailed) setPoints(0);
+    fastGenerateGists();
+    getRandomLanguage();
+    dispatch(setData(''));
+    setStatusControls({
+      isSuccess: false,
+      isFailed: false,
+    });
   };
 
   return (
@@ -111,8 +131,10 @@ export default function Home() {
       </Head>
       <div>
         <h1>{`${points} points`}</h1>
-        {!data.length ? (
-          <ClipLoader color={'black'} loading={true} size={100} />
+        {statusControls.isFailed ? (
+          <h1>{`You lose. The right answer was: ${gameMechanics.rightLanguage}`}</h1>
+        ) : !data.length ? (
+          <ClipLoader color="black" loading size={100} />
         ) : (
           <ReactEmbedGist
             gist={data}
@@ -121,38 +143,19 @@ export default function Home() {
             wrapperClass="wrapper"
           />
         )}
-        <br />
-        {showFail && (
-          <h1>{`You lose. The right answer was: ${rightLanguage}`}</h1>
-        )}
-        {data && (
-          <div>
-            {buttonData.map((value) => (
-              <OptionButton
-                key={value}
-                status={disableButton}
-                name={value}
-                act={handleOptionButtonClick(value)}
-              />
-            ))}
-          </div>
-        )}
-        <br />
-        <br />
-        {showNextButton && (
-          <button
-            onClick={() => {
-              fastGenerateGists();
-              getRandomLanguage();
-              dispatch(setData(''));
-              if (showFail) setPoints(0);
-              setShowFail(false);
-              setDisableButton(false);
-              setShowNextButton(false);
-            }}
-          >
-            {'Next ->'}
-          </button>
+        {statusControls.isSuccess ? (
+          <button onClick={handleNextButtonClick}>Next &#8594;</button>
+        ) : (
+          !statusControls.isFailed &&
+          data && (
+            <div>
+              {gameMechanics.buttonData.map((value) => (
+                <OptionButton key={value} onClick={handleOptionButtonClick}>
+                  {value}
+                </OptionButton>
+              ))}
+            </div>
+          )
         )}
       </div>
     </>
