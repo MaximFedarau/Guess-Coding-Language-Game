@@ -1,14 +1,25 @@
 import React from 'react';
 import Head from 'next/head';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 import ClipLoader from 'react-spinners/ClipLoader';
 import ReactEmbedGist from 'react-embed-gist';
 
+import {
+  MainContainer,
+  GistContainer,
+  ButtonsContainer,
+} from 'components/Container/Container.styles';
+import { PointText } from 'components/Text/Text.styles';
 import OptionButton from 'components/OptionButton/OptionButton.component';
 import { languagesList } from 'constants/data';
 import { setData } from 'store/code/code.slice';
 import { codeDataSelector } from 'store/code/code.selector';
+
+const INITIAL_STATUS_CONTROLS = {
+  isFailed: false,
+  isSuccess: false,
+};
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -21,23 +32,22 @@ export default function Home() {
     buttonData: [],
   });
   const [points, setPoints] = React.useState(0); // ! move points to separate state, because if we move it into gameMechanics object, then it may not have enough time to update between ending and restarting the game
-  const [statusControls, setStatusControls] = React.useState({
-    isFailed: false,
-    isSuccess: false,
-  });
+  const [statusControls, setStatusControls] = React.useState(
+    INITIAL_STATUS_CONTROLS,
+  );
 
   const fastGenerateGists = () => {
-    const client = axios.create({
-      method: 'get',
-      headers: {
-        Authorization: `token ${process.env.NEXT_PUBLIC_API_TOKEN}`,
-      },
-    });
-    client(
-      `https://api.github.com/gists/public?page=${Math.floor(
-        Math.random() * 100,
-      )}`,
-    )
+    axios
+      .get(
+        `https://api.github.com/gists/public?page=${Math.floor(
+          Math.random() * 100,
+        )}`,
+        {
+          headers: {
+            Authorization: `token ${process.env.NEXT_PUBLIC_API_TOKEN}`,
+          },
+        },
+      )
       .then((response) => {
         const gist =
           response.data[Math.floor(Math.random() * response.data.length)];
@@ -46,7 +56,8 @@ export default function Home() {
           Object.keys(gist.files).length >= 2 || // more than one language (file)
           language === null || // no language at all
           language === 'Markdown' || // markdown, because it is similar to plain text or html
-          languagesList.indexOf(language) === -1 // not in languagesList
+          languagesList.indexOf(language) === -1 || // not in languagesList
+          gist.files[Object.keys(gist.files)[0]].size < 1000 // less than 1kb, because it is too small to be a code and also because small pieces of code have bottom margin and it looks bad
         ) {
           fastGenerateGists();
           return;
@@ -106,7 +117,6 @@ export default function Home() {
       });
       return;
     }
-    dispatch(setData(''));
     setStatusControls({
       isSuccess: true,
       isFailed: true,
@@ -118,10 +128,7 @@ export default function Home() {
     fastGenerateGists();
     getRandomLanguage();
     dispatch(setData(''));
-    setStatusControls({
-      isSuccess: false,
-      isFailed: false,
-    });
+    setStatusControls(INITIAL_STATUS_CONTROLS);
   };
 
   return (
@@ -129,35 +136,35 @@ export default function Home() {
       <Head>
         <title>Guess This Code</title>
       </Head>
-      <div>
-        <h1>{`${points} points`}</h1>
-        {statusControls.isFailed ? (
-          <h1>{`You lose. The right answer was: ${gameMechanics.rightLanguage}`}</h1>
-        ) : !data.length ? (
-          <ClipLoader color="black" loading size={100} />
+      <MainContainer>
+        <PointText>{`${points}`}</PointText>
+        {!statusControls.isFailed && !data.length ? (
+          <ClipLoader color="#1572A1" loading size={100} />
         ) : (
-          <ReactEmbedGist
-            gist={data}
-            titleClass="title"
-            contentClass="content"
-            wrapperClass="wrapper"
-          />
+          <GistContainer>
+            <ReactEmbedGist
+              gist={data}
+              titleClass="gist-title"
+              contentClass="gist-content"
+              wrapperClass="gist-wrapper"
+            />
+          </GistContainer>
         )}
         {statusControls.isSuccess ? (
           <button onClick={handleNextButtonClick}>Next &#8594;</button>
         ) : (
           !statusControls.isFailed &&
           data && (
-            <div>
+            <ButtonsContainer>
               {gameMechanics.buttonData.map((value) => (
                 <OptionButton key={value} onClick={handleOptionButtonClick}>
                   {value}
                 </OptionButton>
               ))}
-            </div>
+            </ButtonsContainer>
           )
         )}
-      </div>
+      </MainContainer>
     </>
   );
 }

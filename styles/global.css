@@ -1,22 +1,30 @@
-.title {
-    color: blue;
-    font-size: 0;
+:root {
+    --primary-color: #A2D2FF;
+    --text-color: #1572A1;
 }
 
-.content {
-    max-width: 23rem;
-}
-
-.gist-data {
-    max-height: 15rem;
-}
+/* * Roboto */
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 body {
-    display: flex;
-    justify-content: center;
-    text-align: center;
+    margin: 0;
+    padding: 0;
+    background-color: var(--primary-color);
 }
 
+.gist-wrapper {
+    max-height: 320px;
+}
+
+.gist-wrapper .gist-content .gist-data {
+    max-height: 320px;
+}
+
+/* ! Not included in standard package - found in devtools  */
 .gist-meta {
+    display: none;
+}
+
+.gist-title {
     display: none;
 }
