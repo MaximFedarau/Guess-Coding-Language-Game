@@ -59,7 +59,7 @@ export default function Home() {
           language === null || // no language at all
           language === 'Markdown' || // markdown, because it is similar to plain text or html
           languagesList.indexOf(language) === -1 || // not in languagesList
-          gist.files[Object.keys(gist.files)[0]].size < 1000 // less than 1kb, because it is too small to be a code and also because small pieces of code have bottom margin and it looks bad
+          gist.files[Object.keys(gist.files)[0]].size < 500 // less than 0.5kb, because it is too small to be a code and also because small pieces of code have bottom margin and it looks bad
         ) {
           fastGenerateGists();
           return;
