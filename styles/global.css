@@ -10,9 +10,13 @@
 /* * Roboto */
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
 body {
     min-width: 144px;
-    padding: 0;
     background-color: var(--primary-color);
 }
 
