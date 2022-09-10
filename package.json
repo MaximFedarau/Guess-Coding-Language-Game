@@ -9,15 +9,19 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.8.5",
     "axios": "^0.26.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "next": "12.1.0",
+    "prettier": "^2.7.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-embed-gist": "^1.0.12",
+    "react-icons": "^4.4.0",
     "react-redux": "^7.2.6",
     "react-spinners": "^0.11.0",
-    "react-syntax-highlighter": "^15.4.5",
-    "redux": "^4.1.2"
+    "styled-components": "^5.3.5"
   },
   "devDependencies": {
     "eslint": "8.10.0",

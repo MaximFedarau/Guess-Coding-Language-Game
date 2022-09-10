@@ -1,22 +1,50 @@
-.title {
-    color: blue;
-    font-size: 0;
+:root {
+    --primary-color: #A2D2FF;
+    --text-color: #1572A1;
+    --white: #fff;
+    --black: #000;
+    --green: #7bff2a;
+    --red: #FF0000;
 }
 
-.content {
-    max-width: 23rem;
-}
+/* * Roboto */
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
-.gist-data {
-    max-height: 15rem;
+html, body {
+    margin: 0;
+    padding: 0;
 }
 
 body {
-    display: flex;
-    justify-content: center;
-    text-align: center;
+    min-width: 144px;
+    background-color: var(--primary-color);
 }
 
+/* https://styled-components.com/docs/advanced#issues-with-specificity */
+.success.success {
+    color: var(--white);
+    background-color: var(--green);
+}
+
+/* https://styled-components.com/docs/advanced#issues-with-specificity */
+.fail.fail {
+    color: var(--white);
+    background-color: var(--red);
+}
+
+.gist-wrapper {
+    max-height: 320px;
+}
+
+.gist-wrapper .gist-content .gist-data {
+    max-height: 320px;
+}
+
+/* ! Not included in standard package - found in devtools  */
 .gist-meta {
+    display: none;
+}
+
+.gist-title {
     display: none;
 }
