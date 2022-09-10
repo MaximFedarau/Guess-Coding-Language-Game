@@ -6,25 +6,26 @@ export const MainContainer = styled.article`
   justify-content: center;
   align-items: center;
   gap: 24px;
-  padding: 8px 8px;
+  padding: 12px 8px;
   min-height: 100vh;
 `;
 
 export const GistContainer = styled.section`
   width: 100%;
-  max-width: 640px;
+  max-width: 800px;
   max-height: 320px; // ! For Safari
 `;
 
 export const ButtonsContainer = styled.section`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
+  gap: 32px;
   width: 100%;
-  max-width: 640px;
+  max-width: calc(800px * 0.97);
 
   @media (max-width: 800px) {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 16px;
+    width: 97%;
   }
 `;

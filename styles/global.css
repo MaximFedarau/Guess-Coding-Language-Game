@@ -1,15 +1,31 @@
 :root {
     --primary-color: #A2D2FF;
     --text-color: #1572A1;
+    --white: #fff;
+    --black: #000;
+    --green: #7bff2a;
+    --red: #FF0000;
 }
 
 /* * Roboto */
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 body {
-    margin: 0;
+    min-width: 144px;
     padding: 0;
     background-color: var(--primary-color);
+}
+
+/* https://styled-components.com/docs/advanced#issues-with-specificity */
+.success.success {
+    color: var(--white);
+    background-color: var(--green);
+}
+
+/* https://styled-components.com/docs/advanced#issues-with-specificity */
+.fail.fail {
+    color: var(--white);
+    background-color: var(--red);
 }
 
 .gist-wrapper {

@@ -7,4 +7,5 @@ export const PointText = styled.a`
   text-align: center;
   color: var(--text-color);
   font-family: 'Roboto', sans-serif;
+  user-select: none;
 `;

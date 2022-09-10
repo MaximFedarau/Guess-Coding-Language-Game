@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import ClipLoader from 'react-spinners/ClipLoader';
 import ReactEmbedGist from 'react-embed-gist';
+import { IoArrowForward, IoReload } from 'react-icons/io5';
 
 import {
   MainContainer,
@@ -11,8 +12,9 @@ import {
   ButtonsContainer,
 } from 'components/Container/Container.styles';
 import { PointText } from 'components/Text/Text.styles';
-import OptionButton from 'components/OptionButton/OptionButton.component';
+import { OptionButton, ActionButton } from 'components/Button/Button.styles';
 import { languagesList } from 'constants/data';
+import { colors } from 'constants/colors';
 import { setData } from 'store/code/code.slice';
 import { codeDataSelector } from 'store/code/code.selector';
 
@@ -117,6 +119,7 @@ export default function Home() {
       });
       return;
     }
+    event.target.classList.add('fail');
     setStatusControls({
       isSuccess: true,
       isFailed: true,
@@ -139,7 +142,7 @@ export default function Home() {
       <MainContainer>
         <PointText>{`${points}`}</PointText>
         {!statusControls.isFailed && !data.length ? (
-          <ClipLoader color="#1572A1" loading size={100} />
+          <ClipLoader color={colors['text-color']} loading size={100} />
         ) : (
           <GistContainer>
             <ReactEmbedGist
@@ -150,19 +153,33 @@ export default function Home() {
             />
           </GistContainer>
         )}
-        {statusControls.isSuccess ? (
-          <button onClick={handleNextButtonClick}>Next &#8594;</button>
-        ) : (
-          !statusControls.isFailed &&
-          data && (
-            <ButtonsContainer>
-              {gameMechanics.buttonData.map((value) => (
-                <OptionButton key={value} onClick={handleOptionButtonClick}>
-                  {value}
-                </OptionButton>
-              ))}
-            </ButtonsContainer>
-          )
+        {data && (
+          <ButtonsContainer>
+            {gameMechanics.buttonData.map((value) => (
+              <OptionButton
+                key={value}
+                className={
+                  statusControls.isSuccess &&
+                  value === gameMechanics.rightLanguage
+                    ? 'success'
+                    : ''
+                }
+                disabled={statusControls.isFailed || statusControls.isSuccess}
+                onClick={handleOptionButtonClick}
+              >
+                {value}
+              </OptionButton>
+            ))}
+          </ButtonsContainer>
+        )}
+        {statusControls.isSuccess && (
+          <ActionButton onClick={handleNextButtonClick}>
+            {statusControls.isFailed ? (
+              <IoReload size={40} color={colors['text-color']} />
+            ) : (
+              <IoArrowForward size={40} color={colors['text-color']} />
+            )}
+          </ActionButton>
         )}
       </MainContainer>
     </>
