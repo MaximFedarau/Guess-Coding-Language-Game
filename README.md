@@ -11,7 +11,8 @@ Enjoy!
 <h1 align="center" style="line-height: 0;">🎯Goals:</h1>
 <hr/>
 
-- [x] Solve bug with 2 equal options
-- [x] Add styles
-- [x] Make all base game mechanics
-- [ ] Speed up work with the API
+- [x] Solve bug with 2 equal options.
+- [x] Add styles.
+- [x] Make all base game mechanics.
+- [ ] Solve bug with bottom margin for small-height gists when `max-height` property is set. Also, solving this issue will speed up work with the API, because we we won't need to filter gists by their size.
+- [ ] Speed up work with the API.

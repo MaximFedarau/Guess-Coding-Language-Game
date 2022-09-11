@@ -4,10 +4,7 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        <link
-          rel="icon"
-          href="https://icons.iconarchive.com/icons/custom-icon-design/mono-general-1/128/faq-icon.png"
-        />
+        <link rel="icon" href="icon.png" />
       </Head>
       <body>
         <Main />
