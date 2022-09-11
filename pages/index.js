@@ -23,7 +23,7 @@ const INITIAL_STATUS_CONTROLS = {
   isSuccess: false,
 };
 
-export default function Home() {
+const Home = () => {
   const dispatch = useDispatch();
   const data = useSelector(codeDataSelector);
 
@@ -184,4 +184,6 @@ export default function Home() {
       </MainContainer>
     </>
   );
-}
+};
+
+export default Home;

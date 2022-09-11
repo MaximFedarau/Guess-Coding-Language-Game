@@ -4,7 +4,7 @@ import { IoHelp } from 'react-icons/io5';
 import { MainContainer } from 'components/Container/Container.styles';
 import { colors } from 'constants/colors';
 
-export default function Page404() {
+const Page404 = () => {
   return (
     <>
       <Head>
@@ -19,4 +19,6 @@ export default function Page404() {
       </MainContainer>
     </>
   );
-}
+};
+
+export default Page404;
