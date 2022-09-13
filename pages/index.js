@@ -1,7 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import ClipLoader from 'react-spinners/ClipLoader';
 import ReactEmbedGist from 'react-embed-gist';
 import { IoArrowForward, IoReload } from 'react-icons/io5';
@@ -13,6 +12,7 @@ import {
 } from 'components/Container/Container.styles';
 import { PointText } from 'components/Text/Text.styles';
 import { OptionButton, ActionButton } from 'components/Button/Button.styles';
+import { gistFetching } from 'utils/gistFetching';
 import { languagesList } from 'constants/data';
 import { colors } from 'constants/colors';
 import { setData } from 'store/code/code.slice';
@@ -33,23 +33,13 @@ const Home = () => {
     rightLanguage: '',
     buttonData: [],
   });
-  const [points, setPoints] = React.useState(0); // ! move points to separate state, because if we move it into gameMechanics object, then it may not have enough time to update between ending and restarting the game
+  const [points, setPoints] = React.useState(0);
   const [statusControls, setStatusControls] = React.useState(
     INITIAL_STATUS_CONTROLS,
   );
 
   const fastGenerateGists = () => {
-    axios
-      .get(
-        `https://api.github.com/gists/public?page=${Math.floor(
-          Math.random() * 100,
-        )}`,
-        {
-          headers: {
-            Authorization: `token ${process.env.NEXT_PUBLIC_API_TOKEN}`,
-          },
-        },
-      )
+    gistFetching()
       .then((response) => {
         const gist =
           response.data[Math.floor(Math.random() * response.data.length)];
