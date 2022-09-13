@@ -25,4 +25,5 @@ export const languagesList = [
   'Fluent',
   'Emacs Lisp',
   'Lua',
+  'Ballerina',
 ];

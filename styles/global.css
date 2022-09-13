@@ -40,6 +40,10 @@ body {
     max-height: 320px;
 }
 
+.gist-file {
+    margin: 0 !important; /* ! Warning - removing default margin */
+}
+
 /* ! Not included in standard package - found in devtools  */
 .gist-meta {
     display: none;
