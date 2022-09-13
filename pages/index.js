@@ -1,7 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import ClipLoader from 'react-spinners/ClipLoader';
 import ReactEmbedGist from 'react-embed-gist';
 import { IoArrowForward, IoReload } from 'react-icons/io5';
@@ -13,6 +12,7 @@ import {
 } from 'components/Container/Container.styles';
 import { PointText } from 'components/Text/Text.styles';
 import { OptionButton, ActionButton } from 'components/Button/Button.styles';
+import { gistFetching } from 'utils/gistFetching';
 import { languagesList } from 'constants/data';
 import { colors } from 'constants/colors';
 import { setData } from 'store/code/code.slice';
@@ -23,7 +23,7 @@ const INITIAL_STATUS_CONTROLS = {
   isSuccess: false,
 };
 
-export default function Home() {
+const Home = () => {
   const dispatch = useDispatch();
   const data = useSelector(codeDataSelector);
 
@@ -33,33 +33,20 @@ export default function Home() {
     rightLanguage: '',
     buttonData: [],
   });
-  const [points, setPoints] = React.useState(0); // ! move points to separate state, because if we move it into gameMechanics object, then it may not have enough time to update between ending and restarting the game
+  const [points, setPoints] = React.useState(0);
   const [statusControls, setStatusControls] = React.useState(
     INITIAL_STATUS_CONTROLS,
   );
 
   const fastGenerateGists = () => {
-    axios
-      .get(
-        `https://api.github.com/gists/public?page=${Math.floor(
-          Math.random() * 100,
-        )}`,
-        {
-          headers: {
-            Authorization: `token ${process.env.NEXT_PUBLIC_API_TOKEN}`,
-          },
-        },
-      )
+    gistFetching()
       .then((response) => {
         const gist =
           response.data[Math.floor(Math.random() * response.data.length)];
         const language = gist.files[Object.keys(gist.files)[0]].language;
         if (
-          Object.keys(gist.files).length >= 2 || // more than one language (file)
-          language === null || // no language at all
-          language === 'Markdown' || // markdown, because it is similar to plain text or html
-          languagesList.indexOf(language) === -1 || // not in languagesList
-          gist.files[Object.keys(gist.files)[0]].size < 500 // less than 0.5kb, because it is too small to be a code and also because small pieces of code have bottom margin and it looks bad
+          Object.keys(gist.files).length > 1 || // more than one language (file)
+          languagesList.indexOf(language) === -1 // not in languagesList
         ) {
           fastGenerateGists();
           return;
@@ -142,11 +129,16 @@ export default function Home() {
       <MainContainer>
         <PointText>{`${points}`}</PointText>
         {!statusControls.isFailed && !data.length ? (
-          <ClipLoader color={colors['text-color']} loading size={100} />
+          <ClipLoader
+            color={colors['text-color']}
+            loading
+            size={100}
+            data-testid="Spinner"
+          />
         ) : (
           <GistContainer>
             <ReactEmbedGist
-              gist={data}
+              gist={data} // ArnoldATProJanitorDevs/848455cb125900e107a550950c64013f - small gist - to test gap
               titleClass="gist-title"
               contentClass="gist-content"
               wrapperClass="gist-wrapper"
@@ -184,4 +176,6 @@ export default function Home() {
       </MainContainer>
     </>
   );
-}
+};
+
+export default Home;
