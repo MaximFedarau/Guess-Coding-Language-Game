@@ -12,7 +12,7 @@ jest.mock('next/head', () => {
   };
 });
 
-describe('UI is correct', () => {
+describe('UI is correct.', () => {
   test('Standard and unchanged UI.', () => {
     const page = render(<Page404 />);
     // <body> + <title> check

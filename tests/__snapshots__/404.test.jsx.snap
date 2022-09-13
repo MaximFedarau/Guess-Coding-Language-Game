@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`UI is correct Standard and unchanged UI. 1`] = `
+exports[`UI is correct. Standard and unchanged UI. 1`] = `
 <body>
   <div>
     <title>
