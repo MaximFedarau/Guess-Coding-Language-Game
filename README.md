@@ -15,5 +15,5 @@ Enjoy!
 - [x] Add styles.
 - [x] Make all base game mechanics.
 - [x] Solve bug with bottom margin for small-height gists when `max-height` property is set. Also, solving this issue will speed up work with the API, because we we won't need to filter gists by their size.
-- [x] Speed up work with the API.
+- [ ] Speed up work with the API (e.g. handle array of gists).
 - [ ] Gap is smaller, between buttons and gist frame, when height of the frame, without `max-height`, is more than `max-height` value. Try to solve this.
